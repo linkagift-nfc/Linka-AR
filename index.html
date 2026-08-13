@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+    <title>Linka AR</title>
+
+    <meta
+        name="description"
+        content="Experiência em realidade aumentada com objetos 3D.">
+
+    <meta
+        name="theme-color"
+        content="#0b1020">
+
+    <!-- MODEL VIEWER -->
+    <script
+        type="module"
+        src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js">
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(
+                    circle at top,
+                    #1b2a52 0%,
+                    #0b1020 45%,
+                    #05070d 100%
+                );
+            color: #ffffff;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .titulo {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .descricao {
+            font-size: 15px;
+            line-height: 1.5;
+            opacity: 0.85;
+            margin-bottom: 20px;
+        }
+
+        .viewer-box {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 24px;
+            overflow: hidden;
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(255,255,255,0.08),
+                    rgba(255,255,255,0.01)
+                );
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.35);
+            margin-bottom: 20px;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+
+        .ar-button {
+            background: #ffffff;
+            color: #111827;
+            border: none;
+            border-radius: 999px;
+            padding: 15px 24px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow:
+                0 8px 24px rgba(0,0,0,0.25);
+        }
+
+        .ar-button:active {
+            transform: scale(0.98);
+        }
+
+        .instrucoes {
+            margin-top: 18px;
+            font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.7;
+        }
+
+        .rodape {
+            margin-top: 26px;
+            font-size: 12px;
+            opacity: 0.45;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <div class="logo">
+            LINKA AR
+        </div>
+
+        <h1 class="titulo">
+            Explore a Terra em 3D
+        </h1>
+
+        <p class="descricao">
+            Gire o planeta com o dedo e toque no botão abaixo
+            para visualizar a Terra no seu ambiente.
+        </p>
+
+        <div class="viewer-box">
+
+            <model-viewer
+                src="assets/models/terra.glb"
+
+                alt="Modelo 3D do planeta Terra"
+
+                camera-controls
+                auto-rotate
+                rotation-per-second="15deg"
+
+                shadow-intensity="1"
+
+                environment-image="neutral"
+
+                exposure="1"
+
+                ar
+                ar-modes="webxr scene-viewer quick-look"
+
+                ar-scale="auto"
+
+                camera-orbit="0deg 75deg 2.2m"
+
+                min-camera-orbit="auto auto 1m"
+                max-camera-orbit="auto auto 5m">
+
+                <button
+                    slot="ar-button"
+                    class="ar-button">
+
+                    🌎 VER EM REALIDADE AUMENTADA
+
+                </button>
+
+            </model-viewer>
+
+        </div>
+
+        <div class="instrucoes">
+            No celular, toque em
+            <strong>VER EM REALIDADE AUMENTADA</strong>
+            e permita o acesso necessário para posicionar
+            o planeta no ambiente.
+        </div>
+
+        <div class="rodape">
+            Experiência Linka AR
+        </div>
+
+    </main>
+
+</body>
+
+</html>
