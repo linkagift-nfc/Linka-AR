@@ -12,13 +12,12 @@
 
     <meta
         name="description"
-        content="Experiência em realidade aumentada com objetos 3D.">
+        content="Experiência em realidade aumentada com modelos 3D.">
 
     <meta
         name="theme-color"
         content="#0b1020">
 
-    <!-- MODEL VIEWER -->
     <script
         type="module"
         src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js">
@@ -88,12 +87,12 @@
             background:
                 radial-gradient(
                     circle,
-                    rgba(255,255,255,0.08),
-                    rgba(255,255,255,0.01)
+                    rgba(255, 255, 255, 0.08),
+                    rgba(255, 255, 255, 0.01)
                 );
-            border: 1px solid rgba(255,255,255,0.12);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             box-shadow:
-                0 20px 50px rgba(0,0,0,0.35);
+                0 20px 50px rgba(0, 0, 0, 0.35);
             margin-bottom: 20px;
         }
 
@@ -113,22 +112,26 @@
             font-weight: 700;
             cursor: pointer;
             box-shadow:
-                0 8px 24px rgba(0,0,0,0.25);
+                0 8px 24px rgba(0, 0, 0, 0.25);
         }
 
         .ar-button:active {
             transform: scale(0.98);
         }
 
-        .instrucoes {
-            margin-top: 18px;
+        .status {
+            margin-top: 15px;
             font-size: 13px;
             line-height: 1.5;
-            opacity: 0.7;
+            opacity: 0.75;
+        }
+
+        .erro {
+            color: #ffb4b4;
         }
 
         .rodape {
-            margin-top: 26px;
+            margin-top: 24px;
             font-size: 12px;
             opacity: 0.45;
         }
@@ -143,21 +146,28 @@
             LINKA AR
         </div>
 
-        <h1 class="titulo">
-            Explore a Terra em 3D
+        <h1
+            class="titulo"
+            id="titulo">
+
+            Carregando experiência...
+
         </h1>
 
-        <p class="descricao">
-            Gire o planeta com o dedo e toque no botão abaixo
-            para visualizar a Terra no seu ambiente.
+        <p
+            class="descricao"
+            id="descricao">
+
+            Aguarde enquanto o modelo 3D é carregado.
+
         </p>
 
         <div class="viewer-box">
 
             <model-viewer
-                src="assets/models/terra.glb"
+                id="viewer"
 
-                alt="Modelo 3D do planeta Terra"
+                alt="Modelo 3D"
 
                 camera-controls
                 auto-rotate
@@ -174,16 +184,13 @@
 
                 ar-scale="auto"
 
-                camera-orbit="0deg 75deg 2.2m"
-
-                min-camera-orbit="auto auto 1m"
-                max-camera-orbit="auto auto 5m">
+                autoplay>
 
                 <button
                     slot="ar-button"
                     class="ar-button">
 
-                    🌎 VER EM REALIDADE AUMENTADA
+                    VER EM REALIDADE AUMENTADA
 
                 </button>
 
@@ -191,11 +198,12 @@
 
         </div>
 
-        <div class="instrucoes">
-            No celular, toque em
-            <strong>VER EM REALIDADE AUMENTADA</strong>
-            e permita o acesso necessário para posicionar
-            o planeta no ambiente.
+        <div
+            class="status"
+            id="status">
+
+            Preparando modelo...
+
         </div>
 
         <div class="rodape">
@@ -203,6 +211,158 @@
         </div>
 
     </main>
+
+    <script>
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        const id =
+            params.get("id");
+
+        const viewer =
+            document.getElementById(
+                "viewer"
+            );
+
+        const titulo =
+            document.getElementById(
+                "titulo"
+            );
+
+        const descricao =
+            document.getElementById(
+                "descricao"
+            );
+
+        const status =
+            document.getElementById(
+                "status"
+            );
+
+
+        // ============================================
+        // SEM ID
+        // ============================================
+
+        if (!id) {
+
+            titulo.textContent =
+                "Modelo não informado";
+
+            descricao.textContent =
+                "Este link precisa indicar qual experiência AR deve ser carregada.";
+
+            status.innerHTML =
+                '<span class="erro">' +
+                'Use um endereço como ?id=terra' +
+                '</span>';
+
+        }
+
+        else {
+
+            // ============================================
+            // SEGURANÇA DO NOME
+            // ============================================
+
+            const idSeguro =
+                id
+                    .toLowerCase()
+                    .replace(
+                        /[^a-z0-9-_]/g,
+                        ""
+                    );
+
+
+            // ============================================
+            // CAMINHO AUTOMÁTICO
+            // ============================================
+
+            const caminhoModelo =
+                `models/${idSeguro}/modelo.glb`;
+
+
+            // ============================================
+            // CARREGAR MODELO
+            // ============================================
+
+            viewer.src =
+                caminhoModelo;
+
+            titulo.textContent =
+                idSeguro
+                    .replace(/-/g, " ")
+                    .replace(
+                        /\b\w/g,
+                        letra =>
+                            letra.toUpperCase()
+                    );
+
+            descricao.textContent =
+                "Gire o modelo com o dedo ou visualize em realidade aumentada.";
+
+            status.textContent =
+                "Carregando modelo 3D...";
+
+
+            // ============================================
+            // MODELO CARREGADO
+            // ============================================
+
+            viewer.addEventListener(
+                "load",
+                () => {
+
+                    status.textContent =
+                        "Modelo carregado.";
+
+                    // Se houver animação no GLB,
+                    // tenta reproduzir automaticamente.
+
+                    if (
+                        viewer.availableAnimations &&
+                        viewer.availableAnimations.length > 0
+                    ) {
+
+                        viewer.animationName =
+                            viewer.availableAnimations[0];
+
+                        viewer.play();
+
+                    }
+
+                }
+            );
+
+
+            // ============================================
+            // ERRO
+            // ============================================
+
+            viewer.addEventListener(
+                "error",
+                () => {
+
+                    titulo.textContent =
+                        "Modelo não encontrado";
+
+                    descricao.textContent =
+                        "Não foi possível carregar esta experiência.";
+
+                    status.innerHTML =
+                        '<span class="erro">' +
+                        'Verifique se existe a pasta "' +
+                        idSeguro +
+                        '" e o arquivo "modelo.glb".' +
+                        '</span>';
+
+                }
+            );
+
+        }
+    </script>
 
 </body>
 
